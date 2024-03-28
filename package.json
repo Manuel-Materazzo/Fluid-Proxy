@@ -1,0 +1,33 @@
+{
+  "name": "fluid-proxy",
+  "version": "0.0.1",
+  "description": "Http proxy with an api to manipulate web requests and responses.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node_modules/mocha/bin/mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manuel-Materazzo/Fluid-Proxy.git"
+  },
+  "author": "Manuel Materazzo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Manuel-Materazzo/Fluid-Proxy/issues"
+  },
+  "homepage": "https://github.com/Manuel-Materazzo/Fluid-Proxy#readme",
+  "dependencies": {
+    "chai": "5.1.0",
+    "chai-spies": "1.1.0",
+    "compression": "1.7.4",
+    "cors": "2.8.5",
+    "express": "4.18.3",
+    "mocha": "10.3.0",
+    "nock": "13.5.4",
+    "rel-to-abs": "0.1.0",
+    "node-fetch": "3.3.2",
+    "supertest": "6.3.4"
+  }
+}
