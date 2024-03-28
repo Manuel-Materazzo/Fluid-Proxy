@@ -1,8 +1,23 @@
 'use strict';
 
 import RestService from "../service/rest-service.js"
+import QueryparamService from "../service/queryparam-service.js";
 
 export default app => {
+
+    app.get('/queryparam', async (req, res) => {
+        const requestedUrl = req.query.url
+        const baseUrl =  '//' + req.get('host');
+
+        const requestEdits = QueryparamService.extractRequestEditsFromQueryparams(req.query);
+        const responseEdits = QueryparamService.extractResponseEditsFromQueryparams(baseUrl, req.query);
+
+        console.info(requestedUrl);
+
+        const responseBody = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+
+        responseBody.pipe(res);
+    });
 
 
     app.get('/path-variable/*', async (req, res) => {

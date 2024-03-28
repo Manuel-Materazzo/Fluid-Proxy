@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
 import AlterationService from "./alteration-service.js";
-import { Readable } from "stream"
+import {Readable} from "stream"
 
 export default class RestService {
     static async fetchAndEdit(requestedUrl, requestEdits, responseEdits) {
