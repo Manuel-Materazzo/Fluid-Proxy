@@ -1,5 +1,5 @@
 export default class QueryparamService {
-    static extractRequestEditsFromQueryparams(params) {
+    static extractRequestEdits(params) {
 
         let headers;
         if (params.requestHeaders) {
@@ -18,7 +18,7 @@ export default class QueryparamService {
         }
     }
 
-    static extractResponseEditsFromQueryparams(baseUrl, params) {
+    static extractResponseEdits(baseUrl, params) {
 
         let headers;
         if (params.responseHeaders) {

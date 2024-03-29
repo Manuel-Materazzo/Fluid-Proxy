@@ -9,8 +9,8 @@ export default app => {
         const requestedUrl = req.query.url
         const baseUrl = '//' + req.get('host');
 
-        const requestEdits = QueryparamService.extractRequestEditsFromQueryparams(req.query);
-        const responseEdits = QueryparamService.extractResponseEditsFromQueryparams(baseUrl, req.query);
+        const requestEdits = QueryparamService.extractRequestEdits(req.query);
+        const responseEdits = QueryparamService.extractResponseEdits(baseUrl, req.query);
 
         console.info(requestedUrl);
 
@@ -23,49 +23,23 @@ export default app => {
 
     app.get('/path-variable/*', async (req, res) => {
 
-        let requestedUrl = req.url.slice(15);
+        // slice away the "/path-variable/" part and parse path variables
+        const edits = PathvariableService.extractEdits(req.url.slice(15));
+        const requestedUrl = edits.url;
 
         console.info(requestedUrl);
 
-        let headers = {
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36'
-        };
-
-        // if the request does not start with an url
-        if (!requestedUrl.startsWith("http")) {
-            // extract the first part of the request url
-            const urlParts = requestedUrl.split('/');
-            const serializedHeaders = urlParts[0];
-            requestedUrl = urlParts.slice(1).join("/");
-
-            // supposedly, the first part should contain "&" separated headers to put on the request
-            serializedHeaders.split("&").forEach(serializedHeader => {
-                const header = serializedHeader.split("=");
-                const key = decodeURIComponent(header[0]);
-                const value = decodeURIComponent(header[1]);
-                headers[key] = value;
-            })
-        }
-
-        const requestEdits = {
-            headers: headers,
-            method: req.query.requestMethod,
-            body: req.query.requestBody,
-        };
-
-        // TODO: implement other edits
         const responseEdits = {
             baseUrl: '//' + req.get('host'),
             headers: {},
             body: {
-                rewriteUrls: req.headers['url-rewriting'],
+                rewriteUrls: edits.rewrite,
             }
         };
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const response = await RestService.fetchAndEdit(requestedUrl, edits, responseEdits);
 
         res.set(response.headers);
         response.body.pipe(res);
-
     });
 };
