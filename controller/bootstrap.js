@@ -7,7 +7,7 @@ export default app => {
 
     app.get('/queryparam', async (req, res) => {
         const requestedUrl = req.query.url
-        const baseUrl =  '//' + req.get('host');
+        const baseUrl = '//' + req.get('host');
 
         const requestEdits = QueryparamService.extractRequestEditsFromQueryparams(req.query);
         const responseEdits = QueryparamService.extractResponseEditsFromQueryparams(baseUrl, req.query);
@@ -52,14 +52,13 @@ export default app => {
             body: req.query.requestBody,
         }
 
+        // TODO: implement other edits
         const responseEdits = {
             baseUrl: '//' + req.get('host'),
             headers: {},
-            rewriteUrls: req.headers['url-rewriting'],
-            // bodyPrepend: req.query.responseBodyPrepend,
-            // bodyAppend: req.query.responseBodyAppend,
-            // bodyHtmlHeadAppend: req.query.responseBodyHtmlHeadAppend,
-            // bodyHtmlBodyAppend: req.query.responseBodyHtmlBodyAppend,
+            body: {
+                rewriteUrls: req.headers['url-rewriting'],
+            }
         }
 
         const responseBody = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);

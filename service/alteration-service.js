@@ -1,6 +1,24 @@
 import converter from "rel-to-abs";
+import {parse} from "node-html-parser"
 
 export default class AlterationService {
+
+    /**
+     * Evaluates the necessity of editing the response body with the provided configs
+     * @param responseEdits response edit configs
+     * @returns {boolean}
+     */
+    static isBodyEditNecessary(responseEdits) {
+        let bodyEdit = false;
+        for (let key in responseEdits) {
+            // ignore "false" properties to avoid conversion when option is disabled
+            if (String(responseEdits[key]) === "false") {
+                continue;
+            }
+            bodyEdit = bodyEdit || !!responseEdits[key];
+        }
+        return bodyEdit;
+    }
 
     /**
      * Extracts the originalResponse headers, and adds/replaces the ones passed
@@ -25,15 +43,29 @@ export default class AlterationService {
         return responseHeaders;
     }
 
+    static htmlAppend(htmlString, selector, value){
+        const document = parse(htmlString)
+        const head = document.querySelector(selector);
+        head.append(value);
+        return document.toString();
+    }
+
+    static htmlPrepend(htmlString, selector, value){
+        const document = parse(htmlString)
+        const head = document.querySelector(selector);
+        head.prepend(value);
+        return document.toString();
+    }
+
     /**
-     * Replaces all URLs on the response with the provided url
-     * @param originalResponse response to edit
+     * Replaces all URLs on the provided HTML text with the provided url
+     * @param htmlString HTML response to edit
      * @param oldUrl url to search (auto-discovers relative urls)
      * @param newUrl url to replace oldUrl with
-     * @returns {Promise<string>} String containing the edited body
+     * @returns {string} string containing the edited body
      */
-    static async rewriteUrls(originalResponse, oldUrl, newUrl) {
-        return converter.convert(await originalResponse.text(), oldUrl)
+    static rewriteUrls(htmlString, oldUrl, newUrl) {
+        return converter.convert(htmlString, oldUrl)
                     .replace(oldUrl, newUrl);
     }
 

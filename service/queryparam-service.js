@@ -28,12 +28,15 @@ export default class QueryparamService {
         return  {
             baseUrl: baseUrl,
             headers,
-            rewriteUrls: params.responseRewriteUrls,
-            // TODO: implement
-            // bodyPrepend: params.responseBodyPrepend,
-            // bodyAppend: params.responseBodyAppend,
-            // bodyHtmlHeadAppend: params.responseBodyHtmlHeadAppend,
-            // bodyHtmlBodyAppend: params.responseBodyHtmlBodyAppend,
+            body: {
+                rewriteUrls: params.responseRewriteUrls,
+                htmlAppendSelector: params.responseBodyHtmlAppendSelector,
+                htmlAppendValue: params.responseBodyHtmlAppendValue,
+                htmlPrependSelector: params.responseBodyHtmlPrependSelector,
+                htmlPrependValue: params.responseBodyHtmlPrependValue,
+                // TODO: implement
+                // regexReplace: params.responseBodyRegexReplace
+            }
         }
     }
 }
