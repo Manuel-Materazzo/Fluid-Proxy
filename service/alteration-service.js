@@ -52,9 +52,9 @@ export default class AlterationService {
      */
     static htmlAppend(htmlString, selector, value) {
         const document = parse(htmlString)
-        const element = document.querySelector(selector);
+        const elements = document.querySelectorAll(selector);
         const newElement = parse(value);
-        element.appendChild(newElement);
+        elements.forEach(element => element.appendChild(newElement));
         return document.toString();
     }
 
@@ -67,8 +67,8 @@ export default class AlterationService {
      */
     static htmlPrepend(htmlString, selector, value) {
         const document = parse(htmlString)
-        const element = document.querySelector(selector);
-        element.insertAdjacentHTML('beforebegin', value);
+        const elements = document.querySelectorAll(selector);
+        elements.forEach(element => element.insertAdjacentHTML('beforebegin', value));
         return document.toString();
     }
 
