@@ -9,7 +9,7 @@ export default class RestService {
      * @param requestedUrl url to fetch
      * @param requestEdits edits applied to the request to be made
      * @param responseEdits edits applied to the fetch response
-     * @returns {Promise<Readable|NodeJS.ReadableStream>} edited fetch response
+     * @returns {Promise<{headers: *, body: Readable}>} edited fetch response body and headers
      */
     static async fetchAndEdit(requestedUrl, requestEdits, responseEdits) {
         return await fetch(requestedUrl, {
@@ -17,9 +17,14 @@ export default class RestService {
             headers: requestEdits.headers
         }).then(async originalResponse => {
 
+            const headers = AlterationService.getResponseHeaders(originalResponse, responseEdits.headers);
+
             // if no edit is needed, return the original body
             if (!AlterationService.isBodyEditNecessary(responseEdits)) {
-                return originalResponse.body;
+                return {
+                    headers,
+                    body: originalResponse.body
+                };
             }
 
             // edit the body as needed
@@ -30,10 +35,16 @@ export default class RestService {
             bodyString = this._regexReplace(responseEdits, bodyString);
 
             // convert the body back to a stream
-            return this._toReadableStream(bodyString);
+            return {
+                headers,
+                body: this._toReadableStream(bodyString)
+            };
         }).catch(originResponse => {
             //TODO: different error behaviours (text, json, httpcats, statuscode)
-            return this._toReadableStream(originResponse.message);
+            return {
+                headers: AlterationService.getResponseHeaders(originResponse, responseEdits.headers),
+                body: this._toReadableStream(originResponse.message)
+            };
         });
     }
 

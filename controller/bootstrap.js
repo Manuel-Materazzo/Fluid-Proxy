@@ -14,9 +14,10 @@ export default app => {
 
         console.info(requestedUrl);
 
-        const responseBody = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
 
-        responseBody.pipe(res);
+        res.set(response.headers);
+        response.body.pipe(res);
     });
 
 
@@ -50,7 +51,7 @@ export default app => {
             headers: headers,
             method: req.query.requestMethod,
             body: req.query.requestBody,
-        }
+        };
 
         // TODO: implement other edits
         const responseEdits = {
@@ -59,11 +60,12 @@ export default app => {
             body: {
                 rewriteUrls: req.headers['url-rewriting'],
             }
-        }
+        };
 
-        const responseBody = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
 
-        responseBody.pipe(res);
+        res.set(response.headers);
+        response.body.pipe(res);
 
     });
 };

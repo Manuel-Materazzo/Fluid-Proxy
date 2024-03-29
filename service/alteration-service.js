@@ -43,7 +43,14 @@ export default class AlterationService {
         return responseHeaders;
     }
 
-    static htmlAppend(htmlString, selector, value){
+    /**
+     * Parses the provided html string and appends the provided element as last child of the selector
+     * @param htmlString the html document to parse
+     * @param selector the css selector of the element to append to
+     * @param value the html element to append as last child of selector
+     * @returns {string}
+     */
+    static htmlAppend(htmlString, selector, value) {
         const document = parse(htmlString)
         const element = document.querySelector(selector);
         const newElement = parse(value);
@@ -51,14 +58,21 @@ export default class AlterationService {
         return document.toString();
     }
 
-    static htmlPrepend(htmlString, selector, value){
+    /**
+     * Parses the provided html string and prepend the provided element as first child of the selector
+     * @param htmlString the html document to parse
+     * @param selector the css selector of the element to append to
+     * @param value the html element to prepend as last first of selector
+     * @returns {string}
+     */
+    static htmlPrepend(htmlString, selector, value) {
         const document = parse(htmlString)
         const element = document.querySelector(selector);
         element.insertAdjacentHTML('beforebegin', value);
         return document.toString();
     }
 
-    static regexReplace(source, regex, replacement){
+    static regexReplace(source, regex, replacement) {
         return source.replace(regex, replacement);
     }
 
@@ -71,7 +85,7 @@ export default class AlterationService {
      */
     static rewriteUrls(htmlString, oldUrl, newUrl) {
         return converter.convert(htmlString, oldUrl)
-                    .replace(oldUrl, newUrl);
+            .replace(oldUrl, newUrl);
     }
 
 }
