@@ -45,15 +45,16 @@ export default class AlterationService {
 
     static htmlAppend(htmlString, selector, value){
         const document = parse(htmlString)
-        const head = document.querySelector(selector);
-        head.append(value);
+        const element = document.querySelector(selector);
+        const newElement = parse(value);
+        element.appendChild(newElement);
         return document.toString();
     }
 
     static htmlPrepend(htmlString, selector, value){
         const document = parse(htmlString)
-        const head = document.querySelector(selector);
-        head.prepend(value);
+        const element = document.querySelector(selector);
+        element.insertAdjacentHTML('beforebegin', value);
         return document.toString();
     }
 
