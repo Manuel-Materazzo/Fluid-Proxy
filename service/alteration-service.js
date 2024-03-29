@@ -37,7 +37,7 @@ export default class AlterationService {
         responseHeaders['Access-Control-Allow-Headers'] = 'Content-Type';
 
         // add custom headers
-        for (const [key, value] of Object.entries(headers)) {
+        for (const [key, value] of Object.entries(headers ?? {})) {
             responseHeaders[key] = value;
         }
         return responseHeaders;

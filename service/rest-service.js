@@ -73,12 +73,14 @@ export default class RestService {
      * @private
      */
     static _htmlPrepend(responseEdits, bodyString) {
-        const selector = responseEdits.body.htmlPrependSelector;
-        const value = responseEdits.body.htmlPrependValue;
-        if (selector && value) {
-            return AlterationService.htmlPrepend(bodyString, selector, value);
+        // extracts an object with keys = css selectors and values = html elements
+        // for each selector in the element, edit the body accordingly
+        let editedBody = bodyString;
+        for (const [selector, value] of Object.entries(responseEdits?.body?.htmlPrepend ?? {})) {
+            editedBody = AlterationService.htmlPrepend(editedBody, selector, value);
         }
-        return bodyString;
+
+        return editedBody;
     }
 
     /**
@@ -89,12 +91,14 @@ export default class RestService {
      * @private
      */
     static _htmlAppend(responseEdits, bodyString) {
-        const selector = responseEdits.body.htmlAppendSelector;
-        const value = responseEdits.body.htmlAppendValue;
-        if (selector && value) {
-            return AlterationService.htmlAppend(bodyString, selector, value);
+        // extracts an object with keys = css selectors and values = html elements
+        // for each selector in the element, edit the body accordingly
+        let editedBody = bodyString;
+        for (const [selector, value] of Object.entries(responseEdits?.body?.htmlAppend ?? {})) {
+            editedBody = AlterationService.htmlAppend(editedBody, selector, value);
         }
-        return bodyString;
+
+        return editedBody;
     }
 
     /**
@@ -105,12 +109,14 @@ export default class RestService {
      * @private
      */
     static _regexReplace(responseEdits, bodyString) {
-        const expression = responseEdits.body.regexReplaceExpression;
-        const value = responseEdits.body.regexReplaceValue;
-        if (expression && value) {
-            return AlterationService.regexReplace(bodyString, expression, value);
+        // extracts an object with keys = css selectors and values = html elements
+        // for each selector in the element, edit the body accordingly
+        let editedBody = bodyString;
+        for (const [expression, replaceValue] of Object.entries(responseEdits?.body?.regexReplace ?? {})) {
+            editedBody = AlterationService.regexReplace(editedBody, expression, replaceValue);
         }
-        return bodyString;
+
+        return editedBody;
     }
 
 
