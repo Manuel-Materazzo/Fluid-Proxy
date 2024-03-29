@@ -34,8 +34,8 @@ export default class QueryparamService {
                 htmlAppendValue: params.responseBodyHtmlAppendValue,
                 htmlPrependSelector: params.responseBodyHtmlPrependSelector,
                 htmlPrependValue: params.responseBodyHtmlPrependValue,
-                // TODO: implement
-                // regexReplace: params.responseBodyRegexReplace
+                regexReplaceExpression: params.responseBodyRegexReplaceExpression,
+                regexReplaceValue: params.responseBodyRegexReplaceValue
             }
         }
     }

@@ -27,6 +27,7 @@ export default class RestService {
             bodyString = this._rewriteUrls(requestedUrl, responseEdits, bodyString);
             bodyString = this._htmlAppend(responseEdits, bodyString);
             bodyString = this._htmlPrepend(responseEdits, bodyString);
+            bodyString = this._regexReplace(responseEdits, bodyString);
 
             // convert the body back to a stream
             return this._toReadableStream(bodyString);
@@ -84,6 +85,23 @@ export default class RestService {
         }
         return bodyString;
     }
+
+    /**
+     * Checks if it's necessary to regex replace the body, and does it
+     * @param responseEdits body edit configs
+     * @param bodyString response body to edit
+     * @returns {string}
+     * @private
+     */
+    static _regexReplace(responseEdits, bodyString) {
+        const expression = responseEdits.body.regexReplaceExpression;
+        const value = responseEdits.body.regexReplaceValue;
+        if (expression && value) {
+            return AlterationService.regexReplace(bodyString, expression, value);
+        }
+        return bodyString;
+    }
+
 
 
     /**

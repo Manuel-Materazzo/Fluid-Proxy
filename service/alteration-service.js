@@ -58,6 +58,10 @@ export default class AlterationService {
         return document.toString();
     }
 
+    static regexReplace(source, regex, replacement){
+        return source.replace(regex, replacement);
+    }
+
     /**
      * Replaces all URLs on the provided HTML text with the provided url
      * @param htmlString HTML response to edit
