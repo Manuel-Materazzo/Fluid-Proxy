@@ -27,9 +27,12 @@ export default class AlterationService {
      * @returns {*} header object
      */
     static getResponseHeaders(originalResponse, headers) {
-        // add all headers of the original response but content-encoding. gzip is trouble.
+        // add all headers of the original response
         const responseHeaders = {...originalResponse.headers};
+        // remove gzip headers
         delete responseHeaders['content-encoding'];
+        // remove iframe locking
+        delete responseHeaders['X-Frame-Options'];
 
         // replace cors headers
         responseHeaders['Access-Control-Allow-Origin'] = '*';
