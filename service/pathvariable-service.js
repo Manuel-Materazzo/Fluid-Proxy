@@ -5,7 +5,7 @@ export default class PathvariableService {
 
         let headers;
         if (pathVariables?.[1]?.length > 0) {
-            headers = JSON.parse(pathVariables[1]);
+            headers = JSON.parse(decodeURIComponent(pathVariables[1]));
         }
 
         let rewrite;
@@ -15,10 +15,10 @@ export default class PathvariableService {
 
         let body;
         if (pathVariables?.[3]?.length > 0) {
-            body = JSON.parse(pathVariables[3]);
+            body = JSON.parse(decodeURIComponent(pathVariables[3]));
         }
 
-        const url = pathVariables.slice(4).join("/");
+        const url = decodeURIComponent(pathVariables.slice(4).join("/"));
 
         return  {
             url,
