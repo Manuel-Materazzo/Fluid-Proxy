@@ -33,7 +33,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 
 ## Usage
-TBD
+You can find endpoints, parameters and examples on the project's wiki:
+* [Using Query Params (Recommended)](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Query-Params)
+* [Using Path Variables](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Path-Variables)
 
 ## Deploying
 
