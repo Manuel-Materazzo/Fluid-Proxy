@@ -1,7 +1,7 @@
 {
   "name": "fluid-proxy",
   "version": "0.0.1",
-  "description": "Http proxy with an api to manipulate web requests and responses.",
+  "description": "A versatile HTTP/HTTPS proxy, offering a dynamic API for manipulating web requests and responses.",
   "main": "app.js",
   "type": "module",
   "scripts": {

@@ -59,8 +59,8 @@ export default class RestService {
     static _rewriteUrls(requestedUrl, responseEdits, bodyString) {
         if (String(responseEdits.body.rewriteUrls) === "true") {
             //TODO: use same method as the original request
-            const newUrl = responseEdits.baseUrl + '/path-variable/' + requestedUrl;
-            return AlterationService.rewriteUrls(bodyString, requestedUrl, newUrl);
+            const newUrlStart = responseEdits.baseUrl + '/path-variable/';
+            return AlterationService.rewriteUrls(bodyString, requestedUrl, newUrlStart);
         }
         return bodyString;
     }

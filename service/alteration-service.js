@@ -86,9 +86,10 @@ export default class AlterationService {
      * @param newUrl url to replace oldUrl with
      * @returns {string} string containing the edited body
      */
-    static rewriteUrls(htmlString, oldUrl, newUrl) {
+    static rewriteUrls(htmlString, oldUrl, newUrlStart) {
         return converter.convert(htmlString, oldUrl)
-            .replace(oldUrl, newUrl);
+            .replace("http://", newUrlStart + "http://")
+            .replace("https://", newUrlStart + "https://");
     }
 
 }
