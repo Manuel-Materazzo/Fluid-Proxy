@@ -76,7 +76,7 @@ export default class AlterationService {
     }
 
     static regexReplace(source, regex, replacement) {
-        return source.replace(regex, replacement);
+        return source.replaceAll(regex, replacement);
     }
 
     /**
