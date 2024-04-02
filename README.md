@@ -26,12 +26,6 @@ When deploying this in a production environment, it’s crucial to secure this s
 - Inject CSS and JavaScript into a page for embedding in an iframe, enhancing the functionality and appearance of the embedded content.
 
 
-## Getting Started
-
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
-
-
-
 ## Usage
 You can find endpoints, parameters and examples on the project's wiki:
 * [Using Query Params (Recommended)](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Query-Params)
