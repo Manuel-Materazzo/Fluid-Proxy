@@ -1,9 +1,27 @@
 'use strict';
 
+import fs from "fs";
 import RestService from "../service/rest-service.js"
 import QueryparamService from "../service/queryparam-service.js";
+import PathvariableService from "../service/pathvariable-service.js";
+
+const index = fs.readFileSync('index.html', 'utf8');
+const style = fs.readFileSync('style.css', 'utf8');
+const requestGenerator = fs.readFileSync('request-generator.js', 'utf8');
 
 export default app => {
+
+    app.get('/', (req, res) => {
+        res.send(index);
+    });
+
+    app.get('/style.css', (req, res) => {
+        res.send(style);
+    });
+
+    app.get('/request-generator.js', (req, res) => {
+        res.send(requestGenerator);
+    });
 
     app.get('/queryparam', async (req, res) => {
         const requestedUrl = req.query.url
