@@ -43,7 +43,6 @@ function getQueryparamUrl() {
     let url = host + '/queryparam?';
     params.forEach(param => {
         const value = getUriEncodedValue('queryparam-' + param);
-        console.log(value)
         if (value) {
             url = url + toCamelCase(param) + '=' + value + "&";
         }
@@ -53,9 +52,12 @@ function getQueryparamUrl() {
 }
 
 function toCamelCase(str) {
-    return str.replace('-', function (word, index) {
-        return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    }).replace(/\s+/g, '');
+    return str.toLowerCase().replace(/([-_][a-z])/g, group =>
+        group
+            .toUpperCase()
+            .replace('-', '')
+            .replace('_', '')
+    );
 }
 
 function getPathvariableUrl() {
@@ -122,7 +124,6 @@ endpoints.forEach(endpoint => {
             } else {
                 values[endpoint + '-' + param] = event.target.value;
             }
-            console.log(param)
             // validate the field against regex expression
             validateField(event.target, validationPatterns[param]);
             // compute the URL preview
@@ -130,4 +131,7 @@ endpoints.forEach(endpoint => {
         });
     })
 });
+
+// initial refresh, just to not leave the output empty
+refreshPreview();
 

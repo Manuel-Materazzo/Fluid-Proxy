@@ -16,10 +16,12 @@ export default app => {
     });
 
     app.get('/style.css', (req, res) => {
+        res.setHeader('content-type', 'text/css');
         res.send(style);
     });
 
     app.get('/request-generator.js', (req, res) => {
+        res.setHeader('content-type', 'application/javascript');
         res.send(requestGenerator);
     });
 

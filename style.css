@@ -1,5 +1,6 @@
 body {
-    background-color: #f2f3f8
+    background-color: #f2f3f8;
+    padding-bottom: 70px;
 }
 
 code {
@@ -9,6 +10,9 @@ code {
 }
 
 footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     background: white
 }
 
