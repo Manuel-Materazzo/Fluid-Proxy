@@ -16,7 +16,7 @@ export default class AlterationService {
             return bodyEdit;
         }
 
-        for (const [key, value] of Object.entries(responseEdits.body ?? {})) {
+        for (const [key, value] of Object.entries(responseEdits?.body ?? {})) {
             // ignore "false" properties to avoid conversion when option is disabled
             if (String(value) === "false") {
                 continue;

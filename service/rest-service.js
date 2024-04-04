@@ -20,7 +20,7 @@ export default class RestService {
             const headers = AlterationService.getResponseHeaders(originalResponse, responseEdits.headers);
 
             // if no edit is needed, return the original body
-            if (!AlterationService.isBodyEditNecessary(responseEdits)) {
+            if (!AlterationService.isBodyEditNecessary(headers, responseEdits)) {
                 return {
                     headers,
                     body: originalResponse.body
