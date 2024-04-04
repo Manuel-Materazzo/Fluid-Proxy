@@ -5,17 +5,23 @@ export default class AlterationService {
 
     /**
      * Evaluates the necessity of editing the response body with the provided configs
+     * @param headers response headers
      * @param responseEdits response edit configs
      * @returns {boolean}
      */
-    static isBodyEditNecessary(responseEdits) {
+    static isBodyEditNecessary(headers, responseEdits) {
         let bodyEdit = false;
-        for (let key in responseEdits) {
+
+        if (headers['content-type']?.includes('image')) {
+            return bodyEdit;
+        }
+
+        for (const [key, value] of Object.entries(responseEdits.body ?? {})) {
             // ignore "false" properties to avoid conversion when option is disabled
-            if (String(responseEdits[key]) === "false") {
+            if (String(value) === "false") {
                 continue;
             }
-            bodyEdit = bodyEdit || !!responseEdits[key];
+            bodyEdit = bodyEdit || !!value;
         }
         return bodyEdit;
     }
@@ -27,8 +33,14 @@ export default class AlterationService {
      * @returns {*} header object
      */
     static getResponseHeaders(originalResponse, headers) {
+
+        const responseHeaders = {};
+
         // add all headers of the original response
-        const responseHeaders = {...originalResponse.headers};
+        for (const [key, value] of Object.entries(originalResponse.headers?.raw() ?? {})) {
+            responseHeaders[key] = value[0];
+        }
+
         // remove gzip headers
         delete responseHeaders['content-encoding'];
         // remove iframe locking
@@ -43,6 +55,7 @@ export default class AlterationService {
         for (const [key, value] of Object.entries(headers ?? {})) {
             responseHeaders[key] = value;
         }
+
         return responseHeaders;
     }
 
@@ -83,13 +96,13 @@ export default class AlterationService {
      * Replaces all URLs on the provided HTML text with the provided url
      * @param htmlString HTML response to edit
      * @param oldUrl url to search (auto-discovers relative urls)
-     * @param newUrl url to replace oldUrl with
+     * @param newUrlStart url to replace oldUrl with
      * @returns {string} string containing the edited body
      */
     static rewriteUrls(htmlString, oldUrl, newUrlStart) {
         return converter.convert(htmlString, oldUrl)
-            .replace("http://", newUrlStart + "http://")
-            .replace("https://", newUrlStart + "https://");
+            .replaceAll("http://", newUrlStart + "http://www.")
+            .replaceAll("https://", newUrlStart + "https://www.");
     }
 
 }
