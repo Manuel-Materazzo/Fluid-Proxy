@@ -27,7 +27,10 @@ When deploying this in a production environment, it’s crucial to secure this s
 
 
 ## Usage
-You can find endpoints, parameters and examples on the project's wiki:
+To get started, deploy Fluid Proxy following the steps below and compose your first request with using the 
+**Request Generator** on http://localhost:3000/.
+
+You can find the complete documentation on endpoints and parameters on the project's wiki:
 * [Using Query Params (Recommended)](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Query-Params)
 * [Using Path Variables](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Path-Variables)
 
