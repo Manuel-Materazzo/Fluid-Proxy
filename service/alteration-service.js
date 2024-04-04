@@ -44,7 +44,9 @@ export default class AlterationService {
         // remove gzip headers
         delete responseHeaders['content-encoding'];
         // remove iframe locking
-        delete responseHeaders['X-Frame-Options'];
+        delete responseHeaders['x-frame-options'];
+        // remove content length, it may vary from the final response
+        delete responseHeaders['content-length'];
 
         // replace cors headers
         responseHeaders['Access-Control-Allow-Origin'] = '*';
