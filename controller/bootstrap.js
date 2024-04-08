@@ -62,4 +62,42 @@ export default app => {
         res.set(response.headers);
         response.body.pipe(res);
     });
+
+    // fallback for urls it fails to rewrite, just rethrow the request to another controller
+    app.get('/*', async (req, res) => {
+
+        const referer = req.headers['referer'] ?? '';
+
+        let requestedUri = req.url;
+
+        // slice away the initial "/", if it gets added by the referer
+        if (referer.endsWith('/')) {
+            requestedUri = requestedUri.slice(1);
+        }
+
+        // add the uri to the referer url, it should produce a valid proxied request
+        const requestedUrl = referer + requestedUri;
+
+        console.info("Got an invalid request for: " + requestedUri + " , falling back to: " + requestedUrl);
+
+        const requestEdits = {
+            url: requestedUrl,
+            headers: {},
+            body: {},
+            method: 'GET',
+        }
+
+        const responseEdits = {
+            baseUrl: '//' + req.get('host'),
+            headers: {},
+            body: {
+                rewriteUrls: false,
+            }
+        };
+
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+
+        res.set(response.headers);
+        response.body.pipe(res);
+    });
 };
