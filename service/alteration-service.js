@@ -45,6 +45,7 @@ export default class AlterationService {
         delete responseHeaders['content-encoding'];
         // remove iframe locking
         delete responseHeaders['x-frame-options'];
+        delete responseHeaders['x-content-type-options'];
         // remove content length, it may vary from the final response
         delete responseHeaders['content-length'];
 
@@ -95,16 +96,36 @@ export default class AlterationService {
     }
 
     /**
+     * Replaces all relative urls with absolute urls
+     * @param htmlString HTML response to edit
+     * @param oldUrl url to search (auto-discovers relative urls)
+     * @param newUrlStart url to replace oldUrl with
+     * @returns {string} string containing the edited body
+     */
+    static rewriteUrls(htmlString, oldUrl) {
+        // remove anchors and query params
+        oldUrl = oldUrl.split('#')[0];
+        oldUrl = oldUrl.split('?')[0];
+
+        // remove trailing "/", it gets added by relative paths
+        if (oldUrl.endsWith('/')) {
+            oldUrl = oldUrl.substring(0, oldUrl.length - 1)
+        }
+
+        return converter.convert(htmlString, oldUrl);
+    }
+
+    /**
      * Replaces all URLs on the provided HTML text with the provided url
      * @param htmlString HTML response to edit
      * @param oldUrl url to search (auto-discovers relative urls)
      * @param newUrlStart url to replace oldUrl with
      * @returns {string} string containing the edited body
      */
-    static rewriteUrls(htmlString, oldUrl, newUrlStart) {
-        return converter.convert(htmlString, oldUrl)
-            .replaceAll("http://", newUrlStart + "http://www.")
-            .replaceAll("https://", newUrlStart + "https://www.");
+    static proxyUrls(htmlString, oldUrl, newUrlStart) {
+        return htmlString.replaceAll("../", "/")
+            .replaceAll("http://", newUrlStart + "http://")
+            .replaceAll("https://", newUrlStart + "https://");
     }
 
 }

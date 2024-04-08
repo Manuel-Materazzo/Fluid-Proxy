@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import AlterationService from "./alteration-service.js";
 import {Readable} from "stream"
+import PathvariableService from "./pathvariable-service.js";
 
 export default class RestService {
 
@@ -29,7 +30,7 @@ export default class RestService {
 
             // edit the body as needed
             let bodyString = await originalResponse.text();
-            bodyString = this._rewriteUrls(requestedUrl, responseEdits, bodyString);
+            bodyString = this._rewriteUrls(requestedUrl,requestEdits, responseEdits, headers, bodyString);
             bodyString = this._htmlAppend(responseEdits, bodyString);
             bodyString = this._htmlPrepend(responseEdits, bodyString);
             bodyString = this._regexReplace(responseEdits, bodyString);
@@ -51,18 +52,31 @@ export default class RestService {
     /**
      * Checks if it's necessary to rewrite urls, and does it
      * @param requestedUrl original url of the request
+     * @param requestEdits
      * @param responseEdits body edit configs
+     * @param headers response headers
      * @param bodyString response body to edit
      * @returns {string} string that contains the original/edited body as needed
      * @private
      */
-    static _rewriteUrls(requestedUrl, responseEdits, bodyString) {
-        if (String(responseEdits.body.rewriteUrls) === "true") {
-            //TODO: use same method as the original request
-            const newUrlStart = responseEdits.baseUrl + '/path-variable/GET//true//';
-            return AlterationService.rewriteUrls(bodyString, requestedUrl, newUrlStart);
+    static _rewriteUrls(requestedUrl, requestEdits, responseEdits, headers, bodyString) {
+
+        // not html, skip rewrite
+        if (!headers['content-type']?.includes("html")) {
+            return bodyString
         }
-        return bodyString;
+
+        // rewrite absolute urls
+        //TODO: assets/images/cards/total_eclipse.png not rewrited
+        bodyString = AlterationService.rewriteUrls(bodyString, requestedUrl);
+
+        // if rewriting is disabled, skip url proxying
+        if (String(responseEdits.body.rewriteUrls) !== "true") {
+            return bodyString;
+        }
+
+        const newUrlStart = responseEdits.baseUrl + PathvariableService.generatePath(requestEdits);
+        return AlterationService.proxyUrls(bodyString, requestedUrl, newUrlStart);
     }
 
     /**
@@ -118,7 +132,6 @@ export default class RestService {
 
         return editedBody;
     }
-
 
 
     /**

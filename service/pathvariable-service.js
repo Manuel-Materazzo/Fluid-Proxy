@@ -20,12 +20,33 @@ export default class PathvariableService {
 
         const url = decodeURIComponent(pathVariables.slice(4).join("/"));
 
-        return  {
+        return {
             url,
             rewrite,
             headers,
             body,
             method: pathVariables?.[0],
         }
+    }
+
+    /**
+     * Generates a path variable url from a request edits object
+     * @param requestEdits
+     * @returns {string}
+     */
+    static generatePath(requestEdits) {
+
+        let body = '';
+        if (requestEdits.body) {
+            body = JSON.stringify(requestEdits.body)
+        }
+
+        let headers = '';
+        if (requestEdits.body) {
+            headers = JSON.stringify(requestEdits.headers)
+        }
+
+        console.log('/path-variable/GET/' + headers + '/false/' + body + '/');
+        return '/path-variable/GET/' + headers + '/false/' + body + '/';
     }
 }
