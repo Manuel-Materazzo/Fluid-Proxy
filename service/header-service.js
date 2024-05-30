@@ -1,8 +1,6 @@
 export default class HeaderService {
     static extractRequestEdits(headers) {
 
-        console.log(headers)
-
         let url;
         if (headers["host"]) {
             url = headers["host"];
@@ -18,7 +16,7 @@ export default class HeaderService {
             body = JSON.parse(headers["requestbody"]);
         }
 
-        return  {
+        return {
             url,
             requestHeaders,
             body,
@@ -49,7 +47,7 @@ export default class HeaderService {
         }
 
 
-        return  {
+        return {
             baseUrl: baseUrl,
             responseHeaders,
             body: {
@@ -57,6 +55,13 @@ export default class HeaderService {
                 htmlPrepend,
                 regexReplace
             }
+        }
+    }
+
+    static extractErrorEdits(headers) {
+        return {
+            alwaysok: headers["errorstatusalwaysok"],
+            responseType: headers["errorresponsetype"]
         }
     }
 }

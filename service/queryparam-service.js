@@ -52,4 +52,11 @@ export default class QueryparamService {
             }
         }
     }
+
+    static extractErrorEdits(params) {
+        return  {
+            alwaysok: params.errorStatusAlwaysOk,
+            responseType: params.errorResponseType
+        }
+    }
 }

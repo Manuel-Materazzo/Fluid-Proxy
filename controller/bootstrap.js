@@ -31,14 +31,16 @@ export default app => {
 
         const requestEdits = HeaderService.extractRequestEdits(req.headers);
         const responseEdits = HeaderService.extractResponseEdits(baseUrl, req.headers);
+        const errorEdits = HeaderService.extractErrorEdits(req.headers);
 
         const requestedUrl = requestEdits.url;
 
         console.info(requestedUrl);
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
         res.set(response.headers);
+        res.status(response.status);
         response.body.pipe(res);
     });
 
@@ -48,12 +50,14 @@ export default app => {
 
         const requestEdits = QueryparamService.extractRequestEdits(req.query);
         const responseEdits = QueryparamService.extractResponseEdits(baseUrl, req.query);
+        const errorEdits = QueryparamService.extractErrorEdits(req.query);
 
         console.info(requestedUrl);
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
         res.set(response.headers);
+        res.status(response.status);
         response.body.pipe(res);
     });
 
@@ -74,9 +78,15 @@ export default app => {
             }
         };
 
-        const response = await RestService.fetchAndEdit(requestedUrl, edits, responseEdits);
+        const errorEdits = {
+            alwaysok: false,
+            responseType: "text"
+        }
+
+        const response = await RestService.fetchAndEdit(requestedUrl, edits, responseEdits, errorEdits);
 
         res.set(response.headers);
+        res.status(response.status);
         response.body.pipe(res);
     });
 
@@ -112,9 +122,15 @@ export default app => {
             }
         };
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+        const errorEdits = {
+            alwaysok: false,
+            responseType: "text"
+        }
+
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
         res.set(response.headers);
+        res.status(response.status);
         response.body.pipe(res);
     });
 };

@@ -46,7 +46,6 @@ export default class PathvariableService {
             headers = JSON.stringify(requestEdits.headers)
         }
 
-        console.log('/path-variable/GET/' + headers + '/false/' + body + '/');
         return '/path-variable/GET/' + headers + '/false/' + body + '/';
     }
 }

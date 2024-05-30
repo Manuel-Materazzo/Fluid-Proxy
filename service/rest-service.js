@@ -10,9 +10,10 @@ export default class RestService {
      * @param requestedUrl url to fetch
      * @param requestEdits edits applied to the request to be made
      * @param responseEdits edits applied to the fetch response
-     * @returns {Promise<{headers: *, body: Readable}>} edited fetch response body and headers
+     * @param errorEdits edits applied to errors
+     * @returns {Promise<{headers: *, body: Readable, status: number}>} edited fetch response body and headers
      */
-    static async fetchAndEdit(requestedUrl, requestEdits, responseEdits) {
+    static async fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits) {
         return await fetch(requestedUrl, {
             method: requestEdits.method ?? 'GET',
             headers: requestEdits.headers
@@ -24,13 +25,14 @@ export default class RestService {
             if (!AlterationService.isBodyEditNecessary(headers, responseEdits)) {
                 return {
                     headers,
+                    status: originalResponse.status,
                     body: originalResponse.body
                 };
             }
 
             // edit the body as needed
             let bodyString = await originalResponse.text();
-            bodyString = this._rewriteUrls(requestedUrl,requestEdits, responseEdits, headers, bodyString);
+            bodyString = this._rewriteUrls(requestedUrl, requestEdits, responseEdits, headers, bodyString);
             bodyString = this._htmlAppend(responseEdits, bodyString);
             bodyString = this._htmlPrepend(responseEdits, bodyString);
             bodyString = this._regexReplace(responseEdits, bodyString);
@@ -38,15 +40,51 @@ export default class RestService {
             // convert the body back to a stream
             return {
                 headers,
+                status: originalResponse.status,
                 body: this._toReadableStream(bodyString)
             };
-        }).catch(originResponse => {
-            //TODO: different error behaviours (text, json, httpcats, statuscode)
+        }).catch(async originResponse => {
+            // change the status to 200 if needed
+            let status = originResponse.status ?? 500;
+            if (errorEdits.alwaysok) {
+                status = 200;
+            }
+
             return {
+                status,
                 headers: AlterationService.getResponseHeaders(originResponse, responseEdits.headers),
-                body: this._toReadableStream(originResponse.message)
+                body: await this._formatError(originResponse.status ?? 500, originResponse.message, errorEdits)
             };
         });
+    }
+
+    static async _formatError(status, message, errorEdits) {
+        switch (errorEdits.responseType) {
+            case "json":
+                return new Promise(resolve => {
+                    const errorjson = JSON.stringify({
+                        status,
+                        message: "Fluid proxy encountered an error while retrieving the page: " + status,
+                        errorMessage: message
+                    });
+                    resolve(this._toReadableStream(errorjson));
+                });
+            case "httpcats":
+                return await fetch("https://http.cat/" + status).then(originalResponse => {
+                    // return the httpcats body
+                    return originalResponse.body;
+                }).catch(() => {
+                    // fall back to text errors
+                    errorEdits.responseType = "text"
+                    return this._formatError(status, message, errorEdits);
+                });
+            case "text":
+            default:
+                return new Promise(resolve => {
+                    const errormessage = "Fluid proxy encountered an error while retrieving the page: " + status + ". " + message
+                    resolve(this._toReadableStream(errormessage));
+                });
+        }
     }
 
     /**
