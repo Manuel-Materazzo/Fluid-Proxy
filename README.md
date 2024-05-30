@@ -32,6 +32,7 @@ To get started, deploy Fluid Proxy following the steps below and compose your fi
 
 You can find the complete documentation on endpoints and parameters on the project's wiki:
 * [Using Query Params (Recommended)](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Query-Params)
+* [Using Headers (http/https proxy standard compliant)](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Headers)
 * [Using Path Variables](https://github.com/Manuel-Materazzo/Fluid-Proxy/wiki/Using-Path-Variables)
 
 ## Deploying
