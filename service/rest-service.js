@@ -79,6 +79,7 @@ export default class RestService {
                     return this._formatError(status, message, errorEdits);
                 });
             case "text":
+                return Promise.resolve(this._toReadableStream(message));
             default:
                 return new Promise(resolve => {
                     const errormessage = "Fluid proxy encountered an error while retrieving the page: " + status + ". " + message
