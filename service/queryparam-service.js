@@ -1,5 +1,5 @@
 export default class QueryparamService {
-    static extractRequestEdits(params) {
+    static extractRequestEdits(params, defaultMethod) {
 
         let headers;
         if (params.requestHeaders) {
@@ -14,7 +14,7 @@ export default class QueryparamService {
         return  {
             headers,
             body,
-            method: params.requestMethod,
+            method: params.requestMethod ?? defaultMethod,
         }
     }
 

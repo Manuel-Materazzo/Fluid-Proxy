@@ -14,6 +14,7 @@ export default class RestService {
      * @returns {Promise<{headers: *, body: Readable, status: number}>} edited fetch response body and headers
      */
     static async fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits) {
+        console.info(requestEdits.method + ' ' + requestedUrl);
         return await fetch(requestedUrl, {
             method: requestEdits.method ?? 'GET',
             headers: requestEdits.headers

@@ -12,7 +12,7 @@ const requestGenerator = fs.readFileSync('request-generator.js', 'utf8');
 
 export default app => {
 
-    app.get('/', (req, res) => {
+    app.all('/', (req, res) => {
         res.send(index);
     });
 
@@ -26,17 +26,15 @@ export default app => {
         res.send(requestGenerator);
     });
 
-    app.get('/header', async (req, res) => {
+    app.all('/header', async (req, res) => {
         const baseUrl = '//' + req.get('host');
 
-        const requestEdits = HeaderService.extractRequestEdits(req.headers);
+        const requestEdits = HeaderService.extractRequestEdits(req.headers, req.method);
         const responseEdits = HeaderService.extractResponseEdits(baseUrl, req.headers);
         const errorEdits = HeaderService.extractErrorEdits(req.headers);
 
         const requestedUrl = requestEdits.url;
 
-        console.info(requestedUrl);
-
         const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
         res.set(response.headers);
@@ -44,15 +42,13 @@ export default app => {
         response.body.pipe(res);
     });
 
-    app.get('/queryparam', async (req, res) => {
+    app.all('/queryparam', async (req, res) => {
         const requestedUrl = req.query.url
         const baseUrl = '//' + req.get('host');
 
-        const requestEdits = QueryparamService.extractRequestEdits(req.query);
+        const requestEdits = QueryparamService.extractRequestEdits(req.query, req.method);
         const responseEdits = QueryparamService.extractResponseEdits(baseUrl, req.query);
         const errorEdits = QueryparamService.extractErrorEdits(req.query);
-
-        console.info(requestedUrl);
 
         const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
@@ -62,13 +58,11 @@ export default app => {
     });
 
 
-    app.get('/path-variable/*', async (req, res) => {
+    app.all('/path-variable/*', async (req, res) => {
 
         // slice away the "/path-variable/" part and parse path variables
         const edits = PathvariableService.extractEdits(req.url.slice(15));
         const requestedUrl = edits.url;
-
-        console.info(requestedUrl);
 
         const responseEdits = {
             baseUrl: '//' + req.get('host'),
@@ -91,7 +85,7 @@ export default app => {
     });
 
     // fallback for urls it fails to rewrite, just rethrow the request to another controller
-    app.get('/*', async (req, res) => {
+    app.all('/*', async (req, res) => {
 
         const referer = req.headers['referer'] ?? '';
 

@@ -1,5 +1,5 @@
 export default class HeaderService {
-    static extractRequestEdits(headers) {
+    static extractRequestEdits(headers, defaultMethod) {
 
         let url;
         if (headers["host"]) {
@@ -20,7 +20,7 @@ export default class HeaderService {
             url,
             requestHeaders,
             body,
-            method: headers["requestmethod"],
+            method: headers["requestmethod"] ?? defaultMethod,
         }
     }
 
