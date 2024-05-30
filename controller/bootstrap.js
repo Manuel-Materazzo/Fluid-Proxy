@@ -4,6 +4,7 @@ import fs from "fs";
 import RestService from "../service/rest-service.js"
 import QueryparamService from "../service/queryparam-service.js";
 import PathvariableService from "../service/pathvariable-service.js";
+import HeaderService from "../service/header-service.js";
 
 const index = fs.readFileSync('index.html', 'utf8');
 const style = fs.readFileSync('style.css', 'utf8');
@@ -23,6 +24,22 @@ export default app => {
     app.get('/request-generator.js', (req, res) => {
         res.setHeader('content-type', 'application/javascript');
         res.send(requestGenerator);
+    });
+
+    app.get('/header', async (req, res) => {
+        const baseUrl = '//' + req.get('host');
+
+        const requestEdits = HeaderService.extractRequestEdits(req.headers);
+        const responseEdits = HeaderService.extractResponseEdits(baseUrl, req.headers);
+
+        const requestedUrl = requestEdits.url;
+
+        console.info(requestedUrl);
+
+        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits);
+
+        res.set(response.headers);
+        response.body.pipe(res);
     });
 
     app.get('/queryparam', async (req, res) => {
