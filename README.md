@@ -44,7 +44,7 @@ TBD
 ### Docker(source)
 
 ```shell
-$ git pull https://github.com/Manuel-Materazzo/Fluid-Proxy.git && cd fluid-proxy
+$ git clone https://github.com/Manuel-Materazzo/Fluid-Proxy.git && cd Fluid-Proxy
 $ docker build -t fluid-proxy .
 $ docker run --restart=always -d -p 3000:3000 --name fluid-proxy fluid-proxy
 ```
@@ -52,7 +52,7 @@ $ docker run --restart=always -d -p 3000:3000 --name fluid-proxy fluid-proxy
 ### Node
 
 ```shell
-$ git pull https://github.com/Manuel-Materazzo/Fluid-Proxy.git && cd fluid-proxy
+$ git clone https://github.com/Manuel-Materazzo/Fluid-Proxy.git && cd Fluid-Proxy
 $ npm install
 $ npm start
 ```
