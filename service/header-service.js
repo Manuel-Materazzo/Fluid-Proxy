@@ -18,7 +18,7 @@ export default class HeaderService {
 
         return {
             url,
-            requestHeaders,
+            headers: requestHeaders,
             body,
             method: headers["requestmethod"] ?? defaultMethod,
         }
