@@ -15,7 +15,7 @@ export default class PathvariableService {
 
         let body;
         if (pathVariables?.[3]?.length > 0) {
-            body = JSON.parse(decodeURIComponent(pathVariables[3]));
+            body = decodeURIComponent(pathVariables[3]);
         }
 
         const url = decodeURIComponent(pathVariables.slice(4).join("/"));

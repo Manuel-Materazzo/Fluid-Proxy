@@ -17,7 +17,8 @@ export default class RestService {
         console.info(requestEdits.method + ' ' + requestedUrl);
         return await fetch(requestedUrl, {
             method: requestEdits.method ?? 'GET',
-            headers: requestEdits.headers
+            headers: requestEdits.headers,
+            body: requestEdits.body
         }).then(async originalResponse => {
 
             const headers = AlterationService.getResponseHeaders(originalResponse, responseEdits.headers);

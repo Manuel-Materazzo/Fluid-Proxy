@@ -8,7 +8,7 @@ export default class QueryparamService {
 
         let body;
         if (params.requestBody) {
-            body = JSON.parse(params.requestBody);
+            body = params.requestBody;
         }
 
         return  {

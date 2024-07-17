@@ -13,7 +13,7 @@ export default class HeaderService {
 
         let body;
         if (headers["requestbody"]) {
-            body = JSON.parse(headers["requestbody"]);
+            body = headers["requestbody"];
         }
 
         return {
