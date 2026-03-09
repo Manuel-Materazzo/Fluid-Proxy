@@ -87,7 +87,7 @@ export default class AlterationService {
     static htmlPrepend(htmlString, selector, value) {
         const document = parse(htmlString)
         const elements = document.querySelectorAll(selector);
-        elements.forEach(element => element.insertAdjacentHTML('beforebegin', value));
+        elements.forEach(element => element.insertAdjacentHTML('afterbegin', value));
         return document.toString();
     }
 
