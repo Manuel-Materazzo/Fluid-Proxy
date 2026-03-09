@@ -27,13 +27,12 @@ function clusterApp() {
 }
 
 if (cluster.isWorker) {
+    bootstrap(app);
     app.listen(process.env.PORT || 3000);
 } else {
     clusterApp();
 }
 
 app.options('*', cors())
-
-bootstrap(app);
 
 export default app
