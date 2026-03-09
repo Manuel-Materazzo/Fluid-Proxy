@@ -42,7 +42,7 @@ export default class PathvariableService {
         }
 
         let headers = '';
-        if (requestEdits.body) {
+        if (requestEdits.headers) {
             headers = JSON.stringify(requestEdits.headers)
         }
 
