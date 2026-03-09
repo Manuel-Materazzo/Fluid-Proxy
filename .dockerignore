@@ -1,0 +1,7 @@
+node_modules
+.git
+.idea
+.travis.yml
+AUDIT.md
+README.md
+LICENSE
