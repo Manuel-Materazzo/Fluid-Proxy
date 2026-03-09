@@ -3,7 +3,11 @@ export default class QueryparamService {
 
         let headers;
         if (params.requestHeaders) {
-            headers = JSON.parse(params.requestHeaders);
+            try {
+                headers = JSON.parse(params.requestHeaders);
+            } catch {
+                headers = {};
+            }
         }
 
         let body;
@@ -22,22 +26,38 @@ export default class QueryparamService {
 
         let headers;
         if (params.responseHeaders) {
-            headers = JSON.parse(params.responseHeaders);
+            try {
+                headers = JSON.parse(params.responseHeaders);
+            } catch {
+                headers = {};
+            }
         }
 
         let htmlAppend;
         if (params.responseBodyHtmlAppend) {
-            htmlAppend = JSON.parse(params.responseBodyHtmlAppend);
+            try {
+                htmlAppend = JSON.parse(params.responseBodyHtmlAppend);
+            } catch {
+                htmlAppend = {};
+            }
         }
 
         let htmlPrepend;
         if (params.responseBodyHtmlPrepend) {
-            htmlPrepend = JSON.parse(params.responseBodyHtmlPrepend);
+            try {
+                htmlPrepend = JSON.parse(params.responseBodyHtmlPrepend);
+            } catch {
+                htmlPrepend = {};
+            }
         }
 
         let regexReplace;
         if (params.responseBodyRegexReplace) {
-            regexReplace = JSON.parse(params.responseBodyRegexReplace);
+            try {
+                regexReplace = JSON.parse(params.responseBodyRegexReplace);
+            } catch {
+                regexReplace = {};
+            }
         }
 
 

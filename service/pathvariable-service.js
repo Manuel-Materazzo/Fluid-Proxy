@@ -5,7 +5,11 @@ export default class PathvariableService {
 
         let headers;
         if (pathVariables?.[1]?.length > 0) {
-            headers = JSON.parse(decodeURIComponent(pathVariables[1]));
+            try {
+                headers = JSON.parse(decodeURIComponent(pathVariables[1]));
+            } catch {
+                headers = {};
+            }
         }
 
         let rewrite;

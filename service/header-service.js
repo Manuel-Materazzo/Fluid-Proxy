@@ -8,7 +8,11 @@ export default class HeaderService {
 
         let requestHeaders;
         if (headers["requestheaders"]) {
-            requestHeaders = JSON.parse(headers["requestheaders"]);
+            try {
+                requestHeaders = JSON.parse(headers["requestheaders"]);
+            } catch {
+                requestHeaders = {};
+            }
         }
 
         let body;
@@ -28,22 +32,38 @@ export default class HeaderService {
 
         let responseHeaders;
         if (headers["responseheaders"]) {
-            responseHeaders = JSON.parse(headers["responseheaders"]);
+            try {
+                responseHeaders = JSON.parse(headers["responseheaders"]);
+            } catch {
+                responseHeaders = {};
+            }
         }
 
         let htmlAppend;
         if (headers["responsebodyhtmlappend"]) {
-            htmlAppend = JSON.parse(headers["responsebodyhtmlappend"]);
+            try {
+                htmlAppend = JSON.parse(headers["responsebodyhtmlappend"]);
+            } catch {
+                htmlAppend = {};
+            }
         }
 
         let htmlPrepend;
         if (headers["responsebodyhtmlprepend"]) {
-            htmlPrepend = JSON.parse(headers["responsebodyhtmlprepend"]);
+            try {
+                htmlPrepend = JSON.parse(headers["responsebodyhtmlprepend"]);
+            } catch {
+                htmlPrepend = {};
+            }
         }
 
         let regexReplace;
         if (headers["responsebodyregexreplace"]) {
-            regexReplace = JSON.parse(headers["responsebodyregexreplace"]);
+            try {
+                regexReplace = JSON.parse(headers["responsebodyregexreplace"]);
+            } catch {
+                regexReplace = {};
+            }
         }
 
 
