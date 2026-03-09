@@ -53,7 +53,7 @@ export default class AlterationService {
 
         // replace cors headers
         responseHeaders['Access-Control-Allow-Origin'] = '*';
-        responseHeaders['Access-Control-Allow-Credentials'] = false;
+        responseHeaders['Access-Control-Allow-Credentials'] = 'false';
         responseHeaders['Access-Control-Allow-Headers'] = 'Content-Type';
 
         // add custom headers
