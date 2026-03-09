@@ -1,5 +1,7 @@
 import converter from "rel-to-abs";
 import {parse} from "node-html-parser"
+import safeRegex from "safe-regex2";
+import { Worker } from "node:worker_threads";
 
 export default class AlterationService {
 
@@ -72,8 +74,7 @@ export default class AlterationService {
     static htmlAppend(htmlString, selector, value) {
         const document = parse(htmlString)
         const elements = document.querySelectorAll(selector);
-        const newElement = parse(value);
-        elements.forEach(element => element.appendChild(newElement));
+        elements.forEach(element => element.appendChild(parse(value)));
         return document.toString();
     }
 
@@ -91,8 +92,77 @@ export default class AlterationService {
         return document.toString();
     }
 
-    static regexReplace(source, regex, replacement) {
-        return source.replaceAll(regex, replacement);
+    static async regexReplace(source, pattern, replacement, options = {}) {
+        const {
+            timeoutMs = parseInt(process.env.REGEX_TIMEOUT_MS || '100'),
+            maxPatternLength = parseInt(process.env.REGEX_MAX_PATTERN_LENGTH || '256'),
+            maxSourceLength = parseInt(process.env.REGEX_MAX_SOURCE_LENGTH || '500000'),
+        } = options;
+
+        if (typeof pattern !== 'string' || pattern.length === 0) {
+            throw new Error('regex pattern must be a non-empty string');
+        }
+
+        if (pattern.length > maxPatternLength) {
+            throw new Error('regex pattern too long');
+        }
+
+        if (source.length > maxSourceLength) {
+            throw new Error('source too large for regex replace');
+        }
+
+        // validate regex syntax
+        let re;
+        try {
+            re = new RegExp(pattern, 'g');
+        } catch (err) {
+            throw new Error('invalid regex: ' + err.message);
+        }
+
+        // static safety check for catastrophic backtracking
+        if (!safeRegex(re)) {
+            throw new Error('unsafe regex pattern rejected');
+        }
+
+        // escape replacement specials so user input is treated literally
+        const literalReplacement = String(replacement ?? '').replace(/\$/g, '$$$$');
+
+        // run in worker thread with timeout
+        return this._runRegexWorker(source, pattern, literalReplacement, timeoutMs);
+    }
+
+    static _runRegexWorker(source, pattern, replacement, timeoutMs) {
+        return new Promise((resolve, reject) => {
+            const worker = new Worker(
+                new URL('./regex-replace-worker.js', import.meta.url),
+                { workerData: { source, pattern, replacement } }
+            );
+
+            let settled = false;
+            const finish = (fn, value) => {
+                if (settled) return;
+                settled = true;
+                clearTimeout(timer);
+                fn(value);
+            };
+
+            const timer = setTimeout(async () => {
+                await worker.terminate().catch(() => {});
+                finish(reject, new Error('regex replace timed out after ' + timeoutMs + 'ms'));
+            }, timeoutMs);
+
+            worker.once('message', msg => {
+                if (msg.ok) finish(resolve, msg.result);
+                else finish(reject, new Error(msg.error.message));
+            });
+
+            worker.once('error', err => finish(reject, err));
+            worker.once('exit', code => {
+                if (!settled && code !== 0) {
+                    finish(reject, new Error('regex worker exited with code ' + code));
+                }
+            });
+        });
     }
 
     /**
