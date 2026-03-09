@@ -23,7 +23,7 @@ function clusterApp() {
 
     cluster.on('exit', worker => console.error(`worker ${worker.process.pid} died`));
 
-    console.info("cors-container listening on port 3000 with " + numCPUs + " threads.")
+    console.info("Fluid Proxy listening on port 3000 with " + numCPUs + " threads.")
 }
 
 if (cluster.isWorker) {
