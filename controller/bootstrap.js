@@ -4,6 +4,7 @@ import RestService from "../service/rest-service.js"
 import QueryparamService from "../service/queryparam-service.js";
 import PathvariableService from "../service/pathvariable-service.js";
 import HeaderService from "../service/header-service.js";
+import UrlValidationService from "../service/url-validation-service.js";
 
 const index = fs.readFileSync('index.html', 'utf8');
 const style = fs.readFileSync('style.css', 'utf8');
@@ -35,7 +36,9 @@ export default app => {
 
             const requestedUrl = requestEdits.url;
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
+            await UrlValidationService.validate(requestedUrl);
+
+            const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
             res.set(response.headers);
             res.status(response.status);
@@ -58,7 +61,9 @@ export default app => {
             const responseEdits = QueryparamService.extractResponseEdits(baseUrl, req.query);
             const errorEdits = QueryparamService.extractErrorEdits(req.query);
 
-        const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
+            await UrlValidationService.validate(requestedUrl);
+
+            const response = await RestService.fetchAndEdit(requestedUrl, requestEdits, responseEdits, errorEdits);
 
             res.set(response.headers);
             res.status(response.status);
@@ -92,7 +97,9 @@ export default app => {
                 responseType: "text"
             }
 
-        const response = await RestService.fetchAndEdit(requestedUrl, edits, responseEdits, errorEdits);
+            await UrlValidationService.validate(requestedUrl);
+
+            const response = await RestService.fetchAndEdit(requestedUrl, edits, responseEdits, errorEdits);
 
             res.set(response.headers);
             res.status(response.status);
@@ -123,12 +130,14 @@ export default app => {
 
             console.info("Got an invalid request for: " + requestedUri + " , falling back to: " + requestedUrl);
 
-        const requestEdits = {
-            url: requestedUrl,
-            headers: {},
-            body: {},
-            method: 'GET',
-        }
+            await UrlValidationService.validate(requestedUrl);
+
+            const requestEdits = {
+                url: requestedUrl,
+                headers: {},
+                body: {},
+                method: 'GET',
+            }
 
             const responseEdits = {
                 baseUrl: '//' + req.get('host'),
