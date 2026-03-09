@@ -2,8 +2,8 @@ export default class HeaderService {
     static extractRequestEdits(headers, defaultMethod) {
 
         let url;
-        if (headers["host"]) {
-            url = headers["host"];
+        if (headers["requesturl"]) {
+            url = headers["requesturl"];
         }
 
         let requestHeaders;
