@@ -69,8 +69,10 @@ export default class HeaderService {
 
         return {
             baseUrl: baseUrl,
-            responseHeaders,
+            headers: responseHeaders,
             body: {
+                rewriteUrls: headers["responserewriteurls"],
+                proxyUrlsAttributeOnly: headers["responseproxyurlsattributeonly"] !== 'false',
                 htmlAppend,
                 htmlPrepend,
                 regexReplace
