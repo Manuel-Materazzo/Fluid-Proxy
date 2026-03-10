@@ -192,10 +192,22 @@ export default class AlterationService {
      * @param newUrlStart url to replace oldUrl with
      * @returns {string} string containing the edited body
      */
-    static proxyUrls(htmlString, oldUrl, newUrlStart) {
-        return htmlString.replaceAll("../", "/")
-            .replaceAll("http://", newUrlStart + "http://")
-            .replaceAll("https://", newUrlStart + "https://");
+    static proxyUrls(htmlString, oldUrl, newUrlStart, attributeOnly = true) {
+        let result = htmlString.replaceAll("../", "/");
+
+        if (!attributeOnly) {
+            return result
+                .replaceAll("http://", newUrlStart + "http://")
+                .replaceAll("https://", newUrlStart + "https://");
+        }
+
+        // only replace URLs inside HTML attributes
+        const urlAttributes = '(?:href|src|action|srcset|poster|data|cite|formaction|background)';
+        const attrRegex = new RegExp(
+            '(' + urlAttributes + '\\s*=\\s*["\'])' + '(https?://)',
+            'gi'
+        );
+        return result.replace(attrRegex, '$1' + newUrlStart + '$2');
     }
 
 }

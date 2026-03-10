@@ -66,6 +66,7 @@ export default class QueryparamService {
             headers,
             body: {
                 rewriteUrls: params.responseRewriteUrls,
+                proxyUrlsAttributeOnly: params.responseProxyUrlsAttributeOnly !== 'false',
                 htmlAppend,
                 htmlPrepend,
                 regexReplace
