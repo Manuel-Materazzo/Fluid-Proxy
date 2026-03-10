@@ -2,6 +2,6 @@ node_modules
 .git
 .idea
 .travis.yml
-AUDIT.md
+docs
 README.md
 LICENSE
