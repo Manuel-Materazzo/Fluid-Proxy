@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node app.js",
     "test": "npx mocha --recursive",
-    "coverage": "c8 --reporter=lcov --reporter=text npx mocha --recursive"
+    "coverage": "c8 --reporter=lcov --reporter=text npx mocha --recursive --reporter mocha-junit-reporter --reporter-options mochaFile=./test-results.xml"
   },
   "repository": {
     "type": "git",

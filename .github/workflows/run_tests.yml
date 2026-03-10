@@ -22,7 +22,7 @@ jobs:
         run: npm install
 
       - name: Install test and coverage framework
-        run: npm install --save-dev mocha c8
+        run: npm install --save-dev mocha c8 mocha-junit-reporter
 
       - name: Run tests
         run: npm run coverage
