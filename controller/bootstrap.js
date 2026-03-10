@@ -118,7 +118,13 @@ export default app => {
         try {
             const referer = req.headers['referer'] ?? '';
 
-        let requestedUri = req.url;
+            // only handle fallback if referer contains a proxied URL pattern
+            if (!referer.includes('/queryparam') && !referer.includes('/path-variable/') && !referer.includes('/header')) {
+                res.status(404).send('Not found');
+                return;
+            }
+
+            let requestedUri = req.url;
 
             // slice away the initial "/", if it gets added by the referer
             if (referer.endsWith('/')) {
