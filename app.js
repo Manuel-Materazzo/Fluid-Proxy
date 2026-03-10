@@ -15,6 +15,11 @@ app.use(compression());
 app.set('x-powered-by', false);
 app.use(cors());
 
+// serve static files, cache for 10 hours by default
+app.use(express.static('public', {
+    maxAge: process.env.CACHE_DURATION ?? '10h',
+}));
+
 // cache proxy responses
 app.use(apicache.middleware(process.env.CACHE_DURATION ?? '10 hours'));
 

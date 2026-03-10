@@ -6,25 +6,7 @@ import PathvariableService from "../service/pathvariable-service.js";
 import HeaderService from "../service/header-service.js";
 import UrlValidationService from "../service/url-validation-service.js";
 
-const index = fs.readFileSync('index.html', 'utf8');
-const style = fs.readFileSync('style.css', 'utf8');
-const requestGenerator = fs.readFileSync('request-generator.js', 'utf8');
-
 export default app => {
-
-    app.all('/', (req, res) => {
-        res.send(index);
-    });
-
-    app.get('/style.css', (req, res) => {
-        res.setHeader('content-type', 'text/css');
-        res.send(style);
-    });
-
-    app.get('/request-generator.js', (req, res) => {
-        res.setHeader('content-type', 'application/javascript');
-        res.send(requestGenerator);
-    });
 
     app.all('/header', async (req, res, next) => {
         try {
