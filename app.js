@@ -3,6 +3,7 @@
 import express from "express";
 import cors from "cors";
 import compression from "compression";
+import rateLimit from "express-rate-limit";
 import cluster from "cluster";
 import os from "os";
 import bootstrap from './controller/bootstrap.js';
@@ -14,6 +15,20 @@ const numCPUs = os.cpus().length;
 app.use(compression());
 app.set('x-powered-by', false);
 app.use(cors());
+
+// configurable input size limits
+app.use(express.json({ limit: process.env.BODY_SIZE_LIMIT || '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: process.env.BODY_SIZE_LIMIT || '1mb', parameterLimit: parseInt(process.env.PARAMETER_LIMIT || '100') }));
+
+// configurable rate limiting
+const limiter = rateLimit({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '60000'),
+    max: parseInt(process.env.RATE_LIMIT_MAX || '100'),
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: 'Too many requests, please try again later.',
+});
+app.use(limiter);
 
 // serve static files, cache for 10 hours by default
 app.use(express.static('public', {
