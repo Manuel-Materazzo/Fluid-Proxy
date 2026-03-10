@@ -19,7 +19,7 @@ const values = {};
 let currentEndpoint = 'queryparam-tab';
 
 const validationPatterns = {
-    'url': /^((https?):\/\/)?((www\.)?[a-z0-9]+\.[a-z]+|(localhost)|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(([a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}))(\/[a-zA-Z0-9#]+\/?)*/i,
+    'url': /^((https?):\/\/)?((www\.)?[a-z0-9][-a-z0-9]*(\.[a-z][-a-z0-9]*)+|(localhost)|(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})|(([a-fA-F0-9]{1,4}:){7}[a-fA-F0-9]{1,4}))(:\d+)?(\/[-a-zA-Z0-9._~:@!$&'()*+,;=%#]*)*\/?(\?[-a-zA-Z0-9._~:@!$&'()*+,;=%\/]*)?(#[-a-zA-Z0-9._~:@!$&'()*+,;=%\/]*)?$/i,
     'request-headers': /\{\s*".*"\s*:\s*".*"\s*}$/i,
     'request-body': /\{\s*".*"\s*:\s*".*"\s*}$/i,
     'response-headers': /\{\s*".*"\s*:\s*".*"\s*}$/i,
