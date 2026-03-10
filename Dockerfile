@@ -1,4 +1,5 @@
-FROM node:18.19.1-slim
+FROM node:24-alpine
+ENV NODE_ENV=production
 
 WORKDIR /usr/src/app
 
