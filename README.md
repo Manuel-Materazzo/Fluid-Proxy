@@ -1,4 +1,12 @@
-# Fluid Proxy
+<div align="center">
+<div>
+    <img src="resources/logo.png" width="230" alt="Warp" />
+  </div>
+<a href="https://codecov.io/gh/Manuel-Materazzo/Fluid-Proxy" > 
+ <img src="https://codecov.io/gh/Manuel-Materazzo/Fluid-Proxy/graph/badge.svg?token=OEWO38GRHA"/> 
+</a>
+<br>
+</div>
 
 Fluid Proxy is a versatile HTTP/HTTPS proxy docker container built with Node.js designed to manipulate web requests and responses dynamically.
 
