@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "test": "npx mocha --recursive"
+    "test": "npx mocha --recursive",
+    "coverage": "c8 --reporter=lcov --reporter=text npx mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
     "safe-regex2": "5.0.0"
   },
   "devDependencies": {
+    "c8": "^11.0.0",
     "chai": "5.1.0",
     "chai-spies": "1.1.0",
     "mocha": "10.3.0",
