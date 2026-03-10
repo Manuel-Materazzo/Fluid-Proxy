@@ -8,13 +8,15 @@ import os from "os";
 import bootstrap from './controller/bootstrap.js';
 import apicache from 'apicache'
 
-
 const app = express();
 const numCPUs = os.cpus().length;
 
 app.use(compression());
-app.use(apicache.middleware(process.env.CACHE_DURATION ?? '10 hours'));
 app.set('x-powered-by', false);
+app.use(cors());
+
+// cache proxy responses
+app.use(apicache.middleware(process.env.CACHE_DURATION ?? '10 hours'));
 
 function clusterApp() {
     for (let i = 0; i < numCPUs; i++) {
@@ -32,7 +34,5 @@ if (cluster.isWorker) {
 } else {
     clusterApp();
 }
-
-app.options('*', cors())
 
 export default app
