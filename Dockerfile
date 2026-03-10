@@ -1,12 +1,17 @@
 FROM node:24-alpine
 ENV NODE_ENV=production
 
-WORKDIR /usr/src/app
+WORKDIR /home/node/app
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --omit=dev
+
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm", "start" ]
+
+RUN addgroup -S fluidproxy && adduser -S fluidproxy -G fluidproxy
+USER fluidproxy
+
+CMD [ "node", "app.js" ]

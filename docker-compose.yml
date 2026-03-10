@@ -1,0 +1,13 @@
+services:
+  fluid-proxy:
+    container_name: fluid-proxy
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    read_only: true
+    security_opt:
+      - no-new-privileges
+    cap_drop:
+      - ALL
+    ports:
+      - '8120:3000'
