@@ -37,7 +37,7 @@ export default class RestService {
             bodyString = this._rewriteUrls(requestedUrl, requestEdits, responseEdits, headers, bodyString);
             bodyString = this._htmlAppend(responseEdits, bodyString);
             bodyString = this._htmlPrepend(responseEdits, bodyString);
-            bodyString = this._regexReplace(responseEdits, bodyString);
+            bodyString = await this._regexReplace(responseEdits, bodyString);
 
             // convert the body back to a stream
             return {
@@ -125,7 +125,7 @@ export default class RestService {
         }
 
         const newUrlStart = responseEdits.baseUrl + PathvariableService.generatePath(requestEdits);
-        return AlterationService.proxyUrls(bodyString, requestedUrl, newUrlStart);
+        return AlterationService.proxyUrls(bodyString, requestedUrl, newUrlStart, responseEdits.body.proxyUrlsAttributeOnly);
     }
 
     /**
@@ -171,12 +171,10 @@ export default class RestService {
      * @returns {string}
      * @private
      */
-    static _regexReplace(responseEdits, bodyString) {
-        // extracts an object with keys = css selectors and values = html elements
-        // for each selector in the element, edit the body accordingly
+    static async _regexReplace(responseEdits, bodyString) {
         let editedBody = bodyString;
         for (const [expression, replaceValue] of Object.entries(responseEdits?.body?.regexReplace ?? {})) {
-            editedBody = AlterationService.regexReplace(editedBody, expression, replaceValue);
+            editedBody = await AlterationService.regexReplace(editedBody, expression, replaceValue);
         }
 
         return editedBody;
