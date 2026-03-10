@@ -45,17 +45,25 @@ export default class RestService {
                 status: originalResponse.status,
                 body: this._toReadableStream(bodyString)
             };
-        }).catch(async originResponse => {
+        }).catch(async error => {
             // change the status to 200 if needed
-            let status = originResponse.status ?? 500;
+            let status = error.status ?? 500;
             if (errorEdits.alwaysok) {
                 status = 200;
             }
 
+            const headers = {};
+            headers['Access-Control-Allow-Origin'] = '*';
+            headers['Access-Control-Allow-Credentials'] = 'false';
+            headers['Access-Control-Allow-Headers'] = 'Content-Type';
+            for (const [key, value] of Object.entries(responseEdits.headers ?? {})) {
+                headers[key] = value;
+            }
+
             return {
                 status,
-                headers: AlterationService.getResponseHeaders(originResponse, responseEdits.headers),
-                body: await this._formatError(originResponse.status ?? 500, originResponse.message, errorEdits)
+                headers,
+                body: await this._formatError(error.status ?? 500, error.message, errorEdits)
             };
         });
     }
