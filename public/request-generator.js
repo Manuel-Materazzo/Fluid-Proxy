@@ -33,10 +33,10 @@ const outputElement = document.getElementById('output-url');
 
 function getUriEncodedValue(key) {
     const value = values[key];
-    if (value !== undefined) {
-        return encodeURIComponent(values[key]);
+    if (value !== undefined && value !== '' && value !== null) {
+        return encodeURIComponent(value);
     }
-    return null;
+    return '';
 }
 
 function getQueryparamUrl() {
