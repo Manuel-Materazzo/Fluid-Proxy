@@ -207,9 +207,6 @@ describe('Bootstrap controller integration tests', function () {
             // fallback constructs: referer + requestUri
             // referer ends with '/' so requestUri gets leading '/' sliced
             // result: http://proxy.test/queryparam?url=https://example.com/styles.css
-            // NOTE: the fallback handler sets body: {} for GET requests, which
-            // causes node-fetch to reject (GET cannot have body), resulting in a 500
-            // with an error message piped through the error handler.
             nock('http://proxy.test')
                 .get('/queryparam')
                 .query({ url: 'https://example.com/styles.css' })
@@ -219,14 +216,13 @@ describe('Bootstrap controller integration tests', function () {
                 .get('/styles.css')
                 .set('referer', 'http://proxy.test/queryparam?url=https://example.com/');
 
-            expect(res.status).to.equal(500);
-            expect(res.text).to.include('Request with GET/HEAD method cannot have body');
+            expect(res.status).to.equal(200);
+            expect(res.text).to.include('body { color: red; }');
         });
 
         it('should construct fallback URL from referer with /header pattern', async function () {
             // referer ends with '/' so requestUri '/asset.js' becomes 'asset.js'
             // result: http://proxy.test/header/asset.js
-            // Same body: {} issue as above
             nock('http://proxy.test')
                 .get('/header/asset.js')
                 .reply(200, 'console.log("hi")', { 'content-type': 'application/javascript' });
@@ -235,8 +231,21 @@ describe('Bootstrap controller integration tests', function () {
                 .get('/asset.js')
                 .set('referer', 'http://proxy.test/header/');
 
-            expect(res.status).to.equal(500);
-            expect(res.text).to.include('Request with GET/HEAD method cannot have body');
+            expect(res.status).to.equal(200);
+            expect(res.text).to.include('console.log("hi")');
+        });
+
+        it('should construct fallback URL from referer with /path-variable/ pattern', async function () {
+            nock('http://proxy.test')
+                .get('/path-variable/GET/%7B%7D/false//https://example.com/style.css')
+                .reply(200, '.main { display: flex; }', { 'content-type': 'text/css' });
+
+            const res = await supertest(app)
+                .get('/style.css')
+                .set('referer', 'http://proxy.test/path-variable/GET/%7B%7D/false//https://example.com/');
+
+            expect(res.status).to.equal(200);
+            expect(res.text).to.include('.main { display: flex; }');
         });
     });
 });

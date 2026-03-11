@@ -143,6 +143,27 @@ describe('RestService', function () {
             expect(result.headers['X-Custom']).to.equal('value');
         });
 
+        it('should forward upstream non-200 status (e.g. 404)', async function () {
+            nock('https://example.com')
+                .get('/missing')
+                .reply(404, 'Not Found', { 'content-type': 'text/plain' });
+
+            const requestEdits = { method: 'GET', headers: {} };
+            const responseEdits = { headers: {}, body: {} };
+            const errorEdits = {};
+
+            const result = await RestService.fetchAndEdit(
+                'https://example.com/missing',
+                requestEdits,
+                responseEdits,
+                errorEdits,
+            );
+
+            expect(result.status).to.equal(404);
+            const body = await streamToString(result.body);
+            expect(body).to.include('Not Found');
+        });
+
         it('should use provided method, headers, and body in the fetch call', async function () {
             nock('https://example.com')
                 .post('/api', 'request-body')
