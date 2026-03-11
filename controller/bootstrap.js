@@ -123,7 +123,7 @@ export default app => {
             const requestEdits = {
                 url: requestedUrl,
                 headers: {},
-                body: {},
+                body: undefined,
                 method: 'GET',
             }
 
